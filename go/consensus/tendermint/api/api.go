@@ -4,6 +4,7 @@ package api
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
 	"fmt"
 	"strings"
 
@@ -95,6 +96,34 @@ func IsAttributeKind(key []byte, kind TypedAttribute) bool {
 	return bytes.Equal(key, []byte(kind.EventKind()))
 }
 
+// EncodeEventKV is a helper for base64 encoding event keys/values.
+func EncodeEventKV(value []byte) string {
+	return base64.StdEncoding.EncodeToString(value)
+}
+
+// EncodeEventKVPair is a helper for base64 encoding event key/value pairs.
+func EncodeEventKVPair(key, value []byte) (string, string) {
+	return EncodeEventKV(key), EncodeEventKV(value)
+}
+
+// DecodeEventKV is a helper for base64 decoding event keys/values.
+func DecodeEventKV(value string) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(value)
+}
+
+// DecodeEventKVPair is a helper for base64 decoding event key/value pairs.
+func DecodeEventKVPair(key, value string) ([]byte, []byte, error) {
+	k, err := DecodeEventKV(key)
+	if err != nil {
+		return nil, nil, err
+	}
+	v, err := DecodeEventKV(value)
+	if err != nil {
+		return nil, nil, err
+	}
+	return k, v, nil
+}
+
 // EventBuilder is a helper for constructing ABCI events.
 type EventBuilder struct {
 	app []byte
@@ -103,9 +132,11 @@ type EventBuilder struct {
 
 // Attribute appends a key/value pair to the event.
 func (bld *EventBuilder) Attribute(key, value []byte) *EventBuilder {
+	k, v := EncodeEventKVPair(key, value)
+
 	bld.ev.Attributes = append(bld.ev.Attributes, types.EventAttribute{
-		Key:   key,
-		Value: value,
+		Key:   k,
+		Value: v,
 	})
 
 	return bld
