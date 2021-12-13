@@ -14,7 +14,7 @@ replace (
 	// https://github.com/google/flatbuffers/issues/6466
 	github.com/google/flatbuffers => github.com/google/flatbuffers v1.12.1
 
-	github.com/tendermint/tendermint => github.com/oasisprotocol/tendermint v0.0.0-20211210114627-67ab58697c0b
+	github.com/tendermint/tendermint => github.com/oasisprotocol/tendermint v0.0.0-20211213101732-def7fe02f70e
 
 	golang.org/x/crypto/curve25519 => github.com/oasisprotocol/curve25519-voi/primitives/x25519 v0.0.0-20210505121811-294cf0fbfb43
 	golang.org/x/crypto/ed25519 => github.com/oasisprotocol/curve25519-voi/primitives/ed25519 v0.0.0-20210505121811-294cf0fbfb43
