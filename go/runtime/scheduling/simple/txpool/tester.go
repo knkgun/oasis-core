@@ -92,8 +92,7 @@ func testBasic(t *testing.T, pool api.TxPool) {
 	for i, tx := range batch {
 		hashes[i] = tx.Hash()
 	}
-	err = pool.RemoveBatch(hashes)
-	require.NoError(t, err, "RemoveBatch")
+	pool.RemoveBatch(hashes)
 	require.EqualValues(t, 41, pool.Size(), "Size")
 }
 
@@ -122,8 +121,7 @@ func testGetBatch(t *testing.T, pool api.TxPool) {
 	for i, tx := range batch {
 		hashes[i] = tx.Hash()
 	}
-	err = pool.RemoveBatch(hashes)
-	require.NoError(t, err, "RemoveBatch")
+	pool.RemoveBatch(hashes)
 	require.EqualValues(t, 0, pool.Size(), "Size")
 }
 
@@ -139,8 +137,7 @@ func testRemoveBatch(t *testing.T, pool api.TxPool) {
 	})
 	require.NoError(t, err, "UpdateConfig")
 
-	err = pool.RemoveBatch([]hash.Hash{})
-	require.NoError(t, err, "RemoveBatch empty queue")
+	pool.RemoveBatch([]hash.Hash{})
 
 	// TODO: change to add.
 	for _, tx := range []*transaction.CheckedTransaction{
@@ -153,21 +150,18 @@ func testRemoveBatch(t *testing.T, pool api.TxPool) {
 	}
 	require.EqualValues(t, 4, pool.Size(), "Size")
 
-	err = pool.RemoveBatch([]hash.Hash{})
-	require.NoError(t, err, "RemoveBatch empty batch")
+	pool.RemoveBatch([]hash.Hash{})
 	require.EqualValues(t, 4, pool.Size(), "Size")
 
-	err = pool.RemoveBatch([]hash.Hash{
+	pool.RemoveBatch([]hash.Hash{
 		hash.NewFromBytes([]byte("hello world")),
 		hash.NewFromBytes([]byte("two")),
 	})
-	require.NoError(t, err, "RemoveBatch")
 	require.EqualValues(t, 2, pool.Size(), "Size")
 
-	err = pool.RemoveBatch([]hash.Hash{
+	pool.RemoveBatch([]hash.Hash{
 		hash.NewFromBytes([]byte("hello world")),
 	})
-	require.NoError(t, err, "RemoveBatch not existing batch")
 	require.EqualValues(t, 2, pool.Size(), "Size")
 }
 
@@ -208,7 +202,7 @@ func testUpdateConfig(t *testing.T, pool api.TxPool) {
 	for i, tx := range batch {
 		hashes[i] = tx.Hash()
 	}
-	require.NoError(t, pool.RemoveBatch(hashes), "remove batch")
+	pool.RemoveBatch(hashes)
 	require.EqualValues(t, 1, pool.Size(), "one transaction should remain")
 
 	// Update configuration back to BatchSize=10.
@@ -444,7 +438,7 @@ func benchmarkIncommingQueue(b *testing.B, pool api.TxPool) {
 				break
 			}
 			cntr++
-			_ = pool.RemoveBatch(hashes[(startIdx):(endIdx)])
+			pool.RemoveBatch(hashes[(startIdx):(endIdx)])
 		}
 	})
 }

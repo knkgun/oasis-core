@@ -41,8 +41,8 @@ func (s *scheduler) QueueTx(tx *transaction.CheckedTransaction) error {
 	}
 }
 
-func (s *scheduler) RemoveTxBatch(tx []hash.Hash) error {
-	return s.txPool.RemoveBatch(tx)
+func (s *scheduler) RemoveTxBatch(tx []hash.Hash) {
+	s.txPool.RemoveBatch(tx)
 }
 
 func (s *scheduler) GetBatch(force bool) []*transaction.CheckedTransaction {
@@ -51,6 +51,10 @@ func (s *scheduler) GetBatch(force bool) []*transaction.CheckedTransaction {
 
 func (s *scheduler) GetKnownBatch(batch []hash.Hash) ([]*transaction.CheckedTransaction, map[hash.Hash]int) {
 	return s.txPool.GetKnownBatch(batch)
+}
+
+func (s *scheduler) GetTransactions(limit int) []*transaction.CheckedTransaction {
+	return s.txPool.GetTransactions(limit)
 }
 
 func (s *scheduler) UnscheduledSize() uint64 {

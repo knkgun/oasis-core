@@ -59,8 +59,7 @@ func testScheduleTransactions(t *testing.T, scheduler api.Scheduler) {
 	for i, tx := range batch {
 		hashes[i] = tx.Hash()
 	}
-	err = scheduler.RemoveTxBatch(hashes)
-	require.NoError(t, err, "RemoveTxBatch")
+	scheduler.RemoveTxBatch(hashes)
 	require.False(t, scheduler.IsQueued(testTx.Hash()), "IsQueued(tx)")
 	require.EqualValues(t, 0, scheduler.UnscheduledSize(), "no transactions should remain")
 
@@ -97,7 +96,7 @@ func testScheduleTransactions(t *testing.T, scheduler api.Scheduler) {
 	for i, tx := range batch {
 		hashes[i] = tx.Hash()
 	}
-	require.NoError(t, scheduler.RemoveTxBatch(hashes))
+	scheduler.RemoveTxBatch(hashes)
 	// Make sure queue is empty now.
 	batch = scheduler.GetBatch(true)
 	require.Empty(t, batch, "queue should be empty")
@@ -159,7 +158,7 @@ func testScheduleTransactions(t *testing.T, scheduler api.Scheduler) {
 	for i := 0; i < 50; i++ {
 		returned[i] = scheduler.GetBatch(false)[0]
 		prios[i] = returned[i].Priority()
-		require.NoError(t, scheduler.RemoveTxBatch([]hash.Hash{returned[i].Hash()}))
+		scheduler.RemoveTxBatch([]hash.Hash{returned[i].Hash()})
 	}
 	require.ElementsMatch(t, txs, returned, "all transactions should be returned")
 	require.IsDecreasing(t, prios, "transactions should be sorted by priority")
@@ -184,7 +183,7 @@ func (t *noOpDispatcher) Dispatch(batch []*transaction.CheckedTransaction) {
 	for i, tx := range batch {
 		hashes[i] = tx.Hash()
 	}
-	_ = t.scheduler.RemoveTxBatch(hashes)
+	t.scheduler.RemoveTxBatch(hashes)
 }
 
 func (t *noOpDispatcher) DispatchedSize() int {
@@ -208,7 +207,7 @@ func (t *delayDispatcher) Dispatch(batch []*transaction.CheckedTransaction) {
 	for i, tx := range batch {
 		hashes[i] = tx.Hash()
 	}
-	_ = t.scheduler.RemoveTxBatch(hashes)
+	t.scheduler.RemoveTxBatch(hashes)
 }
 
 func (t *delayDispatcher) DispatchedSize() int {
