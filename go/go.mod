@@ -35,7 +35,7 @@ require (
 	github.com/hpcloud/tail v1.0.0
 	github.com/ianbruene/go-difflib v1.2.0
 	github.com/libp2p/go-libp2p v0.15.1
-	github.com/libp2p/go-libp2p-core v0.9.0
+	github.com/libp2p/go-libp2p-core v0.14.0
 	github.com/libp2p/go-libp2p-pubsub v0.5.5
 	github.com/multiformats/go-multiaddr v0.4.1
 	github.com/oasisprotocol/curve25519-voi v0.0.0-20210908142542-2a44edfcaeb0
